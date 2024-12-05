@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Notas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+    #gradeCalculatorForm {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      text-align: left;
+      max-width: 800px;
+      margin: auto;
+    }
+    #resultContainer {
+      margin-top: 30px;
+      text-align: left;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      max-width: 800px;
+      margin: auto;
+    }
+    #result {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h3>Simulador de Notas</h3>
+  <p>Introduza as notas dos testes realizados:</p>
+  <form id="gradeCalculatorForm">
+    <div>
+      <label for="test1">Teste 1 (3/20):</label><br>
+      <input type="number" id="test1" min="0" max="20" step="0.01">
+    </div>
+    <div>
+      <label for="test2">Teste 2 (1.5/20):</label><br>
+      <input type="number" id="test2" min="0" max="20" step="0.01">
+    </div>
+    <div>
+      <label for="test3">Teste 3 (2.5/20):</label><br>
+      <input type="number" id="test3" min="0" max="20" step="0.01">
+    </div>
+    <div>
+      <label for="test4">Teste 4 (3/20):</label><br>
+      <input type="number" id="test4" min="0" max="20" step="0.01">
+    </div>
+  </form>
+  <div id="resultContainer">
+    <h4>Resultados:</h4>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const weights = {
+        test1: 3 / 20,
+        test2: 1.5 / 20,
+        test3: 2.5 / 20,
+        test4: 3 / 20,
+        test5: 10 / 20
+      };
+
+      const form = document.getElementById('gradeCalculatorForm');
+      const resultDiv = document.getElementById('result');
+
+      function calculateGrades() {
+        const test1 = parseFloat(document.getElementById('test1').value) || 0;
+        const test2 = parseFloat(document.getElementById('test2').value) || 0;
+        const test3 = parseFloat(document.getElementById('test3').value) || 0;
+        const test4 = parseFloat(document.getElementById('test4').value) || 0;
+
+        const partialGrade =
+          test1 * weights.test1 +
+          test2 * weights.test2 +
+          test3 * weights.test3 +
+          test4 * weights.test4;
+
+        function calculateRequiredGrade(targetFinalGrade) {
+          const requiredGrade = (targetFinalGrade - partialGrade) / weights.test5;
+          return requiredGrade > 20
+            ? ">20 (impossível)"
+            : requiredGrade < 0
+            ? "<0 (já alcançado)"
+            : requiredGrade.toFixed(2);
+        }
+
+        const resultMessages = [
+          `[9,5]: ${calculateRequiredGrade(9.5)}`,
+          `[10 - 12]: ${calculateRequiredGrade(10)} - ${calculateRequiredGrade(12)}`,
+          `[13 - 15]: ${calculateRequiredGrade(13)} - ${calculateRequiredGrade(15)}`,
+          `[16 - 18]: ${calculateRequiredGrade(16)} - ${calculateRequiredGrade(18)}`,
+          `[18 - 20]: ${calculateRequiredGrade(18)} - ${calculateRequiredGrade(20)}`
+        ];
+
+        resultDiv.innerHTML = resultMessages.join('<br>');
+      }
+
+      form.addEventListener('input', calculateGrades);
+    });
+  </script>
+</body>
+</html>
